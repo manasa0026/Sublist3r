@@ -3,6 +3,47 @@ import re
 import argparse
 import json
 
+# Check if we are running this on windows platform
+is_windows = sys.platform.startswith('win')
+
+# Console Colors
+if is_windows:
+    # Windows deserves coloring too :D
+    G = '\033[92m'  # green
+    Y = '\033[93m'  # yellow
+    B = '\033[94m'  # blue
+    R = '\033[91m'  # red
+    W = '\033[0m'   # white
+    try:
+        import win_unicode_console , colorama
+        win_unicode_console.enable()
+        colorama.init()
+        #Now the unicode will work ^_^
+    except:
+        print("[!] Error: Coloring libraries not installed, no coloring will be used [Check the readme]")
+        G = Y = B = R = W = G = Y = B = R = W = ''
+
+else:
+    G = '\033[92m'  # green
+    Y = '\033[93m'  # yellow
+    B = '\033[94m'  # blue
+    R = '\033[91m'  # red
+    W = '\033[0m'   # white
+    
+def no_color():
+    global G, Y, B, R, W
+    G = Y = B = R = W = ''
+    
+def banner():
+    print("""%s
+                 ____        _     _ _ _                 _          
+                / ___| _   _| |__ | |_ _|(_) _ __ _   _| | _ .__   _ __ 
+                \___ \| | | | '_ \| |_ _|| ||  __  |/ _  ||   _-_)|  __|
+                 ___) | |_| | |_) | |    | || |  | | (_| ||  (__ | |
+                |____/ \__,_|_.__/|_|    |_||_|  |_|\__._|\_ .__||_|%s%s
+
+    """ % (R, W, Y))
+
 class SubdomainFinder:
     def __init__(self, domain):
         self.domain = domain
