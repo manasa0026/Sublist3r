@@ -1001,6 +1001,10 @@ def interactive():
         no_color()
     banner()
     res = main(domain, threads, savefile, ports, silent=False, verbose=verbose, enable_bruteforce=enable_bruteforce, engines=engines)
+    def main(domain, threads, savefile, ports, silent, verbose, enable_bruteforce, engines):
+    subdomains = list(subdomains)
+    with open(f"{domain}_subdomains.json", "w") as json_file:
+    json.dump(subdomains, json_file, indent=4)
 
 if __name__ == "__main__":
     interactive()
