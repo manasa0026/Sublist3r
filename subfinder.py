@@ -55,7 +55,17 @@ class SubdomainFinder:
             "Accept-Encoding': 'gzip",
             }
         self.print_banner()
+    
+    def print_(self, text):
+        if not self.silent:
+            print(text)
+        return
 
+    def print_banner(self):
+        """ subclass can override this if they want a fancy banner :)"""
+        self.print_(G + "[-] Searching now in %s.." % (self.engine_name) + W)
+        return
+        
     def search_google(self):
         url = f"https://www.google.com/search?q=site:{self.domain}"
         response = requests.get(url, headers=self.headers)
