@@ -963,78 +963,47 @@ def main(domain, threads, savefile, ports, silent, verbose, enable_bruteforce, e
         json_output = False
         bruteforce_list = subbrute.print_target(parsed_domain.netloc, record_type, subs, resolvers, process_count, output, json_output, search_list, verbose)
 
-    #subdomains = search_list.union(bruteforce_list)
+    subdomains = search_list.union(bruteforce_list)
 
-    #if subdomains:
-        #subdomains = sorted(subdomains, key=subdomain_sorting_key)
+    if subdomains:
+        subdomains = sorted(subdomains, key=subdomain_sorting_key)
 
-        #if savefile:
-            #write_file(savefile, subdomains)
+        if savefile:
+            write_file(savefile, subdomains)
 
-        #if not silent:
-            #print(Y + "[-] Total Unique Subdomains Found: %s" % len(subdomains) + W)
+        if not silent:
+            print(Y + "[-] Total Unique Subdomains Found: %s" % len(subdomains) + W)
 
-        #if ports:
-            #if not silent:
-                #print(G + "[-] Start port scan now for the following ports: %s%s" % (Y, ports) + W)
-            #ports = ports.split(',')
-            #pscan = portscan(subdomains, ports)
-            #pscan.run()
+        if ports:
+            if not silent:
+                print(G + "[-] Start port scan now for the following ports: %s%s" % (Y, ports) + W)
+            ports = ports.split(',')
+            pscan = portscan(subdomains, ports)
+            pscan.run()
 
-        #elif not silent:
-            #for subdomain in sorted(subdomains):
-                #print(subdomain)
-            #for subdomain in subdomains:
-                #print(G + subdomain + W)
-    subdomains = [f"www.{domain}", f"mail.{domain}", f"api.{domain}"]
-
-    if output_file:
-        if output_format == "json":
-            with open(output_file, "w") as f:
-                json.dump(subdomains, f, indent=4) #write json to file.
-            print(f"Subdomains written to {output_file} in JSON format.")
-        elif output_format == "text":
-            with open(output_file, "w") as f:
-                for subdomain in subdomains:
-                    f.write(subdomain + "\n") #write text to file.
-            print(f"Subdomains written to {output_file} in text format.")
-        else:
-            print("Invalid output format. Defaulting to text.")
-            with open(output_file, "w") as f:
-                for subdomain in subdomains:
-                    f.write(subdomain + "\n")
-    else:
-        for subdomain in subdomains:
-            print(subdomain)
-
+        elif not silent:
+            for subdomain in sorted(subdomains):
+                print(subdomain)
+            for subdomain in subdomains:
+                print(G + subdomain + W)
     return subdomains
 
 
-#def interactive():
-    #args = parse_args()
-    #domain = args.domain
-    #threads = args.threads
-    #savefile = args.output
-    #ports = args.ports
-    #enable_bruteforce = args.bruteforce
-    #verbose = args.verbose
-    #engines = args.engines
-    #if verbose or verbose is None:
-        #verbose = True
-    #if args.no_color:
-        #no_color()
-    #banner()
-    #res = main(domain, threads, savefile, ports, silent=False, verbose=verbose, enable_bruteforce=enable_bruteforce, engines=engines)
-
-def main():
-    parser = argparse.ArgumentParser(description="Simplified Subdomain Enumerator")
-    parser.add_argument("-d", "--domain", required=True, help="Target domain")
-    parser.add_argument("-o", "--output", help="Output file")
-    parser.add_argument("-f", "--format", help="Output format (text or json)", choices=["text", "json"], default="text")
-
-    args = parser.parse_args()
-
-    find_subdomains(args.domain, args.output, args.format)    
+def interactive():
+    args = parse_args()
+    domain = args.domain
+    threads = args.threads
+    savefile = args.output
+    ports = args.ports
+    enable_bruteforce = args.bruteforce
+    verbose = args.verbose
+    engines = args.engines
+    if verbose or verbose is None:
+        verbose = True
+    if args.no_color:
+        no_color()
+    banner()
+    res = main(domain, threads, savefile, ports, silent=False, verbose=verbose, enable_bruteforce=enable_bruteforce, engines=engines)    
 
 if __name__ == "__main__":
     main()
