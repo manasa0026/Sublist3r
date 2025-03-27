@@ -940,7 +940,6 @@ def main(domain, threads, savefile, ports, silent, verbose, enable_bruteforce, e
                 chosenEnums.append(supported_engines[engine.lower()])
 
     # Start the engines enumeration
-    def find_subdomains(domain, output_file=None, output_format="text"):
     enums = [enum(domain, [], q=subdomains_queue, silent=silent, verbose=verbose) for enum in chosenEnums]
     for enum in enums:
         enum.start()
@@ -982,8 +981,6 @@ def main(domain, threads, savefile, ports, silent, verbose, enable_bruteforce, e
             pscan.run()
 
         elif not silent:
-            for subdomain in sorted(subdomains):
-                print(subdomain)
             for subdomain in subdomains:
                 print(G + subdomain + W)
     return subdomains
@@ -1003,7 +1000,7 @@ def interactive():
     if args.no_color:
         no_color()
     banner()
-    res = main(domain, threads, savefile, ports, silent=False, verbose=verbose, enable_bruteforce=enable_bruteforce, engines=engines)    
+    res = main(domain, threads, savefile, ports, silent=False, verbose=verbose, enable_bruteforce=enable_bruteforce, engines=engines)
 
 if __name__ == "__main__":
-    main()
+    interactive()
