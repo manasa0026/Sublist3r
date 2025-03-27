@@ -9,6 +9,19 @@ class SubdomainFinder:
         self.subdomains = set()
         self.headers = {"User-Agent": "Mozilla/5.0"}
 
+    def print_banner(self):
+        banner = r"""
+               __    _____           __         
+   _______  __/ /_  / __(_)___  ____/ /__  _____
+  / ___/ / / / __ \/ /_/ / __ \/ __  / _ \/ ___/
+ (__  ) /_/ / /_/ / __/ / / / / /_/ /  __/ /    
+/____/\__,_/_.___/_/ /_/_/ /_/\__,_/\___/_/
+ 
+                                   
+        SubFinder - OSINT Tool
+        """
+        print(banner)
+
     def search_google(self):
         url = f"https://www.google.com/search?q=site:{self.domain}"
         response = requests.get(url, headers=self.headers)
@@ -40,7 +53,8 @@ class SubdomainFinder:
         print(f"\n[+] Results saved in {output_file}")
 
     def run(self):
-        print(f"Finding subdomains for: {self.domain}")
+        self.print_banner()
+        print(f"\nFinding subdomains for: {self.domain}")
         self.search_google()
         self.search_bing()
         self.search_virustotal()
