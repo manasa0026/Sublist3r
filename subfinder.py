@@ -45,6 +45,40 @@ def banner():
 
     """ % (R, W, Y))
 
+def parser_error(errmsg):
+    banner()
+    print("Usage: python " + sys.argv[0] + " [Options] use -h for help")
+    print(R + "Error: " + errmsg + W)
+    sys.exit()
+
+def parse_args():
+    # parse the arguments
+    parser = argparse.ArgumentParser(epilog='\tExample: \r\npython ' + sys.argv[0] + " -d google.com")
+    parser.error = parser_error
+    parser._optionals.title = "OPTIONS"
+    parser.add_argument('-d', '--domain', help="Domain name to enumerate it's subdomains", required=True)
+    parser.add_argument('-b', '--bruteforce', help='Enable the subbrute bruteforce module', nargs='?', default=False)
+    parser.add_argument('-p', '--ports', help='Scan the found subdomains against specified tcp ports')
+    parser.add_argument('-v', '--verbose', help='Enable Verbosity and display results in realtime', nargs='?', default=False)
+    parser.add_argument('-t', '--threads', help='Number of threads to use for subbrute bruteforce', type=int, default=30)
+    parser.add_argument('-e', '--engines', help='Specify a comma-separated list of search engines')
+    parser.add_argument('-o', '--output', help='Save the results to text file')
+    parser.add_argument('-n', '--no-color', help='Output without color', default=False, action='store_true')
+    return parser.parse_args()
+
+def write_file(filename, subdomains):
+    # saving subdomains results to output file
+    print("%s[-] Saving results to file: %s%s%s%s" % (Y, W, R, filename, W))
+    with open(str(filename), 'wt') as f:
+        for subdomain in subdomains:
+            f.write(subdomain + os.linesep)
+            
+def subdomain_sorting_key(hostname):
+    parts = hostname.split('.')[::-1]
+    if parts[-1] == 'www':
+        return parts[:-1], 1
+    return parts, 0
+
 class SubdomainFinder:
     def __init__(self, domain):
         self.domain = domain
@@ -55,8 +89,14 @@ class SubdomainFinder:
             "Accept-Language': 'en-US,en;q=0.8",
             "Accept-Encoding': 'gzip",
             }
-        self.print_banner()
         
+    def __init__(self, domain):
+        if not domain:
+            raise ValueError("Domain must be provided!")
+        self.domain = domain
+        self.engine_name = "SomeEngine"
+        self.print_banner()
+
     def search_google(self):
         url = f"https://www.google.com/search?q=site:{self.domain}"
         response = requests.get(url, headers=self.headers)
@@ -100,7 +140,9 @@ class SubdomainFinder:
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Simple Subdomain Finder (Inspired by Sublist3r)")
     parser.add_argument("-d", "--domain", required=True, help="Target domain")
+    parser.add_argument("domain", help="Domain to find subdomains for")
     args = parser.parse_args()
-
+    
+    print(f"Parsed domain: {args.domain}")  # Debugging print
     finder = SubdomainFinder(args.domain)
     finder.run()
