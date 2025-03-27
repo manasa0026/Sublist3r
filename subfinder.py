@@ -46,11 +46,9 @@ def banner():
     """ % (R, W, Y))
 
 class SubdomainFinder:
-    def __init__(self, domain, engine_name, silent=False):
+    def __init__(self, domain):
         self.domain = domain
         self.subdomains = set()
-        self.engine_name = engine_name
-        self.silent = silent
         self.headers = {
             "User-Agent': 'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.36",
             "Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8",
@@ -58,16 +56,6 @@ class SubdomainFinder:
             "Accept-Encoding': 'gzip",
             }
         self.print_banner()
-    
-    def print_(self, text):
-        if not self.silent:
-            print(text)
-        return
-
-    def print_banner(self):
-        """ subclass can override this if they want a fancy banner :)"""
-        self.print_(G + "[-] Searching now in %s.." % (self.engine_name) + W)
-        return
         
     def search_google(self):
         url = f"https://www.google.com/search?q=site:{self.domain}"
