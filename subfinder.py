@@ -36,14 +36,14 @@ def no_color():
     G = Y = B = R = W = ''
     
 def banner():
-    print("""%%s
+    print("""%s
                  ____        _     _ _ _                 _          
                 / ___| _   _| |__ | |_ _|(_) _ __ _   _| | _ .__   _ __ 
                 \___ \| | | | '_ \| |_ _|| ||  __  |/ _  ||   _-_)|  __|
                  ___) | |_| | |_) | |    | || |  | | (_| ||  (__ | |
                 |____/ \__,_|_.__/|_|    |_||_|  |_|\__._|\_ .__||_|%s%s
 
-    """ %% (R, W, Y))
+    """ % (R, W, Y))
 
 class SubdomainFinder:
     def __init__(self, domain, engine_name, silent=False):
