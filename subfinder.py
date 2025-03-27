@@ -31,6 +31,46 @@ class SubdomainFinder:
         url = f"https://www.bing.com/search?q=site:{self.domain}"
         response = requests.get(url, headers=self.headers)
         self.extract_subdomains(response.text)
+    
+    def search_yahoo(self):
+        url = f"https://www.yahoo.com/search?q=site:{self.domain}"
+        response = requests.get(url, headers=self.headers)
+        self.extract_subdomains(response.text)
+    
+    def search_dnsdumpster(self):
+        url = f"https://www.dnsdumpster.com/search?q=site:{self.domain}"
+        response = requests.get(url, headers=self.headers)
+        self.extract_subdomains(response.text)
+        
+    def search_ask(self):
+        url = f"https://www.ask.com/search?q=site:{self.domain}"
+        response = requests.get(url, headers=self.headers)
+        self.extract_subdomains(response.text)
+        
+    def search_netcraft(self):
+        url = f"https://www.netcraft.com/search?q=site:{self.domain}"
+        response = requests.get(url, headers=self.headers)
+        self.extract_subdomains(response.text)
+        
+    def search_baidu(self):
+        url = f"https://www.baidu.com/search?q=site:{self.domain}"
+        response = requests.get(url, headers=self.headers)
+        self.extract_subdomains(response.text)
+        
+    def search_threatcrowd(self):
+        url = f"https://www.threatcrowd.com/search?q=site:{self.domain}"
+        response = requests.get(url, headers=self.headers)
+        self.extract_subdomains(response.text)
+        
+    def search_crtsearch(self):
+        url = f"https://www.crtsearch.com/search?q=site:{self.domain}"
+        response = requests.get(url, headers=self.headers)
+        self.extract_subdomains(response.text)
+        
+    def search_passivedns(self):
+        url = f"https://www.passivedns.com/search?q=site:{self.domain}"
+        response = requests.get(url, headers=self.headers)
+        self.extract_subdomains(response.text)
 
     def search_virustotal(self):
         url = f"https://www.virustotal.com/ui/domains/{self.domain}/subdomains"
@@ -39,7 +79,7 @@ class SubdomainFinder:
             data = response.json()
             for sub in data.get("data", []):
                 self.subdomains.add(sub["id"])
-
+                
     def extract_subdomains(self, text):
         pattern = rf"([a-zA-Z0-9._-]+\.{re.escape(self.domain)})"
         found = re.findall(pattern, text)
