@@ -2,6 +2,7 @@ import requests
 import re
 import argparse
 import json
+import socket
 
 class SubdomainFinder:
     def __init__(self, domain):
@@ -83,11 +84,21 @@ class SubdomainFinder:
     def extract_subdomains(self, text):
         pattern = rf"([a-zA-Z0-9._-]+\.{re.escape(self.domain)})"
         found = re.findall(pattern, text)
-        self.subdomains.update(found)
+        for sub in found:
+            self.subdomains[sub] = None  # Placeholder for IP address
 
+    def resolve_ip_addresses(self):
+        print("\n[+] Resolving IP addresses...")
+        for sub in self.subdomains.keys():
+            try:
+                ip = socket.gethostbyname(sub)
+                self.subdomains[sub] = ip
+            except socket.gaierror:
+                self.subdomains[sub] = "Could not resolve"
+                
     def save_results(self):
         output_file = "json.txt"
-        result = {"domain": self.domain, "subdomains": list(self.subdomains)}
+        result = {"domain": self.domain, "subdomains": self.subdomains}
         with open(output_file, "w") as f:
             json.dump(result, f, indent=4)
         print(f"\n[+] Results saved in {output_file}")
@@ -98,13 +109,25 @@ class SubdomainFinder:
         self.search_google()
         self.search_bing()
         self.search_virustotal()
-        print("\n[+] Discovered Subdomains:")
-        for sub in sorted(self.subdomains):
-            print(sub)
+        self.search_yahoo()
+        self.search_dnsdumpster()
+        self.search_ask()
+        self.search_netcraft()
+        self.search_baidu()
+        self.search_threatcrowd()
+        self.search_crtsearch()
+        self.search_passivedns()
+        
+        self.resolve_ip_addresses()
+        
+        print("\n[+] Discovered Subdomains with IPs:")
+        for sub, ip in self.subdomains.items():
+            print(f"{sub} -> {ip}")
+
         self.save_results()
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description="Simple Subdomain Finder (Inspired by Sublist3r)")
+    parser = argparse.ArgumentParser(description="Simple Subdomain Finder with IP Resolution")
     parser.add_argument("-d", "--domain", required=True, help="Target domain")
     args = parser.parse_args()
 
